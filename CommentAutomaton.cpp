@@ -14,7 +14,7 @@ int CommentAutomaton::Start(const string &input) {
     if(input[0] == '#'){
         if(input.size() > 1 && input[1] == '|'){
             inputRead = 2; //make up for first two skipped
-            for (int i = 2; i < input.size()-1 && isMatch; i++){
+            for (unsigned int i = 2; i < input.size()-1 && isMatch; i++){
                 if(input.at(i) == '|' && input.at(i + 1) == '#'){ //if it's a block comment
                     isMatch = false;
                     inputRead += 2;
@@ -30,7 +30,7 @@ int CommentAutomaton::Start(const string &input) {
 
         }
         else {
-            for (int i = 0; i < input.size() && isMatch; i++) { //if it's line comment
+            for (unsigned int i = 0; i < input.size() && isMatch; i++) { //if it's line comment
                 if (input[i] == '\n' || input[i] == EOF) {
                     isMatch = false;
                 } else {

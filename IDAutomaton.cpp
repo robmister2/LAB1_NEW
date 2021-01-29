@@ -8,7 +8,7 @@ int IDAutomaton::Start(const string& input) {
     bool isMatch = true;
     inputRead = 0; // member variable inherited from Automaton class
     if(isalpha(input[0])){
-        for (int i = 0; i < input.size() && isMatch; ++i){
+        for (unsigned int i = 0; i < input.size() && isMatch; ++i){
             if(!isalnum(input[i])){
                 isMatch = false;
             }

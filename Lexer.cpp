@@ -30,7 +30,7 @@ void Lexer::Run(string &inputString) {
         int maxChar = 0;
         int maxAuto = 0;
         //run through the automata
-        for (int i = 0; i < automata.size(); i++) {
+        for (unsigned int i = 0; i < automata.size(); i++) {
             int testChar = automata.at(i)->Start(inputString);
 
             if (testChar > maxChar) {
@@ -63,7 +63,7 @@ void Lexer::Run(string &inputString) {
             tokens.push_back(automata.at(maxAuto)->CreateToken(tokenString, lineNumber));
 
         }
-        for (int i = 0; i < tokenString.size(); i++) { //Account for lines IN the token for next one
+        for (unsigned int i = 0; i < tokenString.size(); i++) { //Account for lines IN the token for next one
             if (tokenString.at(i) == '\n') {
                 lineNumber++;
             }
@@ -74,7 +74,7 @@ void Lexer::Run(string &inputString) {
 
 string Lexer::toString() {
     string output = "";
-    for (int i = 0; i < tokens.size(); ++i){
+    for (unsigned int i = 0; i < tokens.size(); ++i){
         output += tokens.at(i)->toString();
         output += "\n";
     }
@@ -85,7 +85,7 @@ string Lexer::toString() {
 int Lexer::removeWhitespace(string& input){
     int count = 0;
     int lineNums = 0;
-    for (int i = 0; i < input.size(); i++){
+    for (unsigned int i = 0; i < input.size(); i++){
         if(isspace(input.at(i))){
             count += 1;
             if(input.at(i) == '\n') {
@@ -98,4 +98,4 @@ int Lexer::removeWhitespace(string& input){
     }
     input.erase(0, count);
     return lineNums;
-};
+}

@@ -13,8 +13,8 @@ protected:
     string input;
     int line;
 public:
-    Token::Token();
-    Token::Token(string name, int lineNum, TokenType tok  ){
+    Token();
+    Token(string name, int lineNum, TokenType tok  ){
         token = tok;
         input = name;
         line = lineNum;

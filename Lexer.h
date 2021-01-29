@@ -18,7 +18,7 @@ private:
     std::vector<Token*> tokens;
     std::vector<Automaton*> automata;
 public:
-    Lexer::Lexer() {
+    Lexer() {
         tokens =  vector<Token*>();
         automata =  vector<Automaton*>();
 

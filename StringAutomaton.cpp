@@ -16,7 +16,7 @@ int StringAutomaton::Start(const string &input) {
             return 2;
         }
         inputRead = 1; //account for shift in i
-        for (int i = 1; i < input.size() - 1 && isMatch; ++i){
+        for (unsigned int i = 1; i < input.size() - 1 && isMatch; ++i){
             if((input[i]) == '\''){
                 inputRead++;
                 if(input[i + 1] != '\''){
