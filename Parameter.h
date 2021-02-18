@@ -1,12 +1,14 @@
-//
-// Created by Rob on 2/18/2021.
-//
 
 #ifndef LAB1_NEW_PARAMETER_H
 #define LAB1_NEW_PARAMETER_H
+#include <string>
+using namespace std;
 
 
-class Parameter {
+    class Parameter {
+private:
+public:
+    virtual string toString();
 
 };
 

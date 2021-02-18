@@ -3,7 +3,7 @@ project(LAB1_NEW)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(LAB1_NEW main.cpp Automaton.cpp Automaton.h Lexer.cpp Lexer.h MatcherAutomaton.cpp MatcherAutomaton.h Token.cpp Token.h IDAutomaton.cpp IDAutomaton.h CommentAutomaton.cpp CommentAutomaton.h StringAutomaton.cpp StringAutomaton.h Parser.cpp Parser.h DatalogProgram.cpp DatalogProgram.h Rule.cpp Rule.h Predicate.cpp Predicate.h Parameter.cpp Parameter.h)
+add_executable(LAB1_NEW main.cpp Automaton.cpp Automaton.h Lexer.cpp Lexer.h MatcherAutomaton.cpp MatcherAutomaton.h Token.cpp Token.h IDAutomaton.cpp IDAutomaton.h CommentAutomaton.cpp CommentAutomaton.h StringAutomaton.cpp StringAutomaton.h Parser.cpp Parser.h DatalogProgram.cpp DatalogProgram.h Rule.cpp Rule.h Predicate.cpp Predicate.h Parameter.cpp Parameter.h Expression.cpp Expression.h PlainParameter.cpp PlainParameter.h)
 
 file(COPY 1-70 DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY 1-90 DESTINATION ${CMAKE_BINARY_DIR})

@@ -27,7 +27,7 @@ int main (int argc, char* argv[]) {
     vector<Token*> allTokens = tokenizer->GetTokens();
     //std::cout << tokenizer->toString();
 
-    for (int i = 0; i < allTokens.size(); i++){
+    for (unsigned int i = 0; i < allTokens.size(); i++){
         if (allTokens.at(i)->getTokenType() == COMMENT){
             allTokens.erase(allTokens.begin() + i);
             i--;
@@ -35,8 +35,13 @@ int main (int argc, char* argv[]) {
     }
 
     Parser *parser = new Parser;
+
+
     try{
         parser->parse(allTokens);
+        cout << "Success!" << endl;
+        DatalogProgram* parsed = parser->getDatalogProgram();
+        cout << parsed->toString();
     }
     catch (...){
         cout << "Failure!" << endl;

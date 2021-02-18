@@ -1,12 +1,20 @@
-//
-// Created by Rob on 2/18/2021.
-//
 
+#include <string>
 #ifndef LAB1_NEW_RULE_H
 #define LAB1_NEW_RULE_H
+#include "Predicate.h"
+#include <vector>
+using namespace std;
 
 
 class Rule {
+private:
+    Predicate* headPredicate;
+    vector<Predicate*> predicates;
+
+    public:
+    string toString();
+    Rule(Predicate* headpred1, vector<Predicate*> preds1);
 
 };
 

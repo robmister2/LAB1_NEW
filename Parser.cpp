@@ -10,9 +10,10 @@ void Parser::parse(vector<Token*> &tokens) {
 
 void Parser::datalogProgram(vector<Token*> &tokens) {
     //datalogProgram	->	SCHEMES COLON scheme schemeList FACTS COLON factList RULES COLON ruleList QUERIES COLON query queryList EOF
+
     SCHEMESparse(tokens);
     COLONparse(tokens);
-    scheme(tokens);
+    stream->insertSchemes(scheme(tokens));
     schemeList(tokens);
     FACTSparse(tokens);
     COLONparse(tokens);
@@ -22,7 +23,7 @@ void Parser::datalogProgram(vector<Token*> &tokens) {
     ruleList(tokens);
     QUERIESparse(tokens);
     COLONparse(tokens);
-    query(tokens);
+    stream->insertQueries(query(tokens));
     queryList(tokens);
     END_OF_FILEparse(tokens);
 
@@ -32,7 +33,7 @@ void Parser::datalogProgram(vector<Token*> &tokens) {
 void Parser::schemeList(vector<Token*> &tokens) {
     //schemeList	->	scheme schemeList | lambda
     if(tokens.front()->getTokenType() == ID){
-        scheme(tokens);
+        stream->insertSchemes(scheme(tokens));
         schemeList(tokens);
     }
     else if (tokens.front()->getTokenType() == FACTS){
@@ -47,7 +48,7 @@ void Parser::schemeList(vector<Token*> &tokens) {
 void Parser::factList(vector<Token*> &tokens) {
     //factList	->	fact factList | lambda
     if(tokens.front()->getTokenType() == ID){
-        fact(tokens);
+        stream->insertFacts(fact(tokens));
         factList(tokens);
     }
     else if (tokens.front()->getTokenType() == RULES){
@@ -62,7 +63,7 @@ void Parser::factList(vector<Token*> &tokens) {
 void Parser::ruleList(vector<Token*> &tokens) {
     //ruleList	->	rule ruleList | lambda
     if(tokens.front()->getTokenType() == ID){
-        rule(tokens);
+        stream->insertRules(rule(tokens));
         ruleList(tokens);
 
     }
@@ -78,7 +79,7 @@ void Parser::ruleList(vector<Token*> &tokens) {
 void Parser::queryList(vector<Token*> &tokens) {
     //queryList	->	query queryList | lambda
     if(tokens.front()->getTokenType() == ID){
-        query(tokens);
+        stream->insertQueries(query(tokens));
         queryList(tokens);
 
     }
@@ -92,17 +93,18 @@ void Parser::queryList(vector<Token*> &tokens) {
 
 }
 
-void Parser::scheme(vector<Token*> &tokens) {
+Predicate* Parser::scheme(vector<Token*> &tokens) {
     //scheme   	-> 	ID LEFT_PAREN ID idList RIGHT_PAREN
     if(tokens.front()->getTokenType() == ID){
-      IDparse(tokens);
+        vector<Parameter*> parameters;
+      string name = IDparse(tokens)->getName();
+
       LEFT_PARENparse(tokens);
-      IDparse(tokens);
-      idList(tokens);
+      parameters.push_back(IDparse(tokens));
+      idList(tokens ,parameters);
       RIGHT_PARENparse(tokens);
 
-    }
-    else if (tokens.front()->getTokenType() == COLON){
+      return(new Predicate(name, parameters));
 
     }
     else{
@@ -111,18 +113,22 @@ void Parser::scheme(vector<Token*> &tokens) {
 
 }
 
-void Parser::fact(vector<Token*> &tokens) {
+Predicate* Parser::fact(vector<Token*> &tokens) {
     //fact    	->	ID LEFT_PAREN STRING stringList RIGHT_PAREN PERIOD
     if(tokens.front()->getTokenType() == ID){
-        IDparse(tokens);
+        vector<Parameter*> parameters;
+
+        string name = IDparse(tokens)->getName();
         LEFT_PARENparse(tokens);
-        STRINGparse(tokens);
-        stringList(tokens);
+        parameters.push_back(STRINGparse(tokens));
+        stringList(tokens, parameters);
         RIGHT_PARENparse(tokens);
         PERIODparse(tokens);
-    }
-    else if (tokens.front()->getTokenType() == RULES){
+        for(unsigned int i = 0; i < parameters.size(); ++i){    //CREATING DOMAIN VECTOR
+            stream->insertDomain(parameters.at(i)->toString());
+        }
 
+        return (new Predicate(name, parameters));
     }
     else{
         throw "bad";
@@ -130,25 +136,30 @@ void Parser::fact(vector<Token*> &tokens) {
 
 }
 
-void Parser::rule(vector<Token*> &tokens) {
+Rule* Parser::rule(vector<Token*> &tokens) {
     //rule    	->	headPredicate COLON_DASH predicate predicateList PERIOD
     if(tokens.front()->getTokenType() == ID){
-    headPredicate(tokens);
+    vector<Predicate*> predicates;
+
+    Predicate* head = headPredicate(tokens);
     COLON_DASHparse(tokens);
-    predicate(tokens);
-    predicateList(tokens);
+    predicates.push_back(predicate(tokens));
+    predicateList(tokens,predicates);
     PERIODparse(tokens);
+
+    return(new Rule(head, predicates));
 }
     else{
         throw "bad";
     }
 }
 
-void Parser::query(vector<Token*> &tokens) {
+Predicate* Parser::query(vector<Token*> &tokens) {
     //query	        ->      predicate Q_MARK
     if(tokens.front()->getTokenType() == ID){
-        predicate(tokens);
+        Predicate* pred = predicate(tokens);
         Q_MARKparse(tokens);
+        return pred;
     }
     else{
         throw "bad";
@@ -156,14 +167,18 @@ void Parser::query(vector<Token*> &tokens) {
 
 }
 
-void Parser::headPredicate(vector<Token*> &tokens) {
+Predicate* Parser::headPredicate(vector<Token*> &tokens) {
    // headPredicate	->	ID LEFT_PAREN ID idList RIGHT_PAREN
     if(tokens.front()->getTokenType() == ID){
-        IDparse(tokens);
+         vector<Parameter*> parameters;
+        string name = IDparse(tokens)->getName();
+
         LEFT_PARENparse(tokens);
-        IDparse(tokens);
-        idList(tokens);
+        parameters.push_back(IDparse(tokens));
+        idList(tokens, parameters);
         RIGHT_PARENparse(tokens);
+
+        return (new Predicate(name, parameters));
     }
     else{
         throw "bad";
@@ -172,14 +187,18 @@ void Parser::headPredicate(vector<Token*> &tokens) {
 
 }
 
-void Parser::predicate(vector<Token*> &tokens) {
+Predicate* Parser::predicate(vector<Token*> &tokens) {
     //predicate	->	ID LEFT_PAREN parameter parameterList RIGHT_PAREN
     if(tokens.front()->getTokenType() == ID){
-        IDparse(tokens);
+        vector<Parameter*> parameters;
+        string name = IDparse(tokens)->getName();
+
         LEFT_PARENparse(tokens);
-        parameter(tokens);
-        parameterList(tokens);
+        parameters.push_back(parameter(tokens));
+        parameterList(tokens, parameters);
         RIGHT_PARENparse(tokens);
+
+        return(new Predicate(name, parameters));
     }
     else{
         throw "bad";
@@ -187,12 +206,12 @@ void Parser::predicate(vector<Token*> &tokens) {
 
 }
 
-void Parser::predicateList(vector<Token*> &tokens) {
+void Parser::predicateList(vector<Token*> &tokens, vector<Predicate*>&predicates) {
     //predicateList	->	COMMA predicate predicateList | lambda
     if(tokens.front()->getTokenType() == COMMA){
         COMMAparse(tokens);
-        predicate(tokens);
-        predicateList(tokens);
+        predicates.push_back(predicate(tokens));
+        predicateList(tokens, predicates);
     }
     else if(tokens.front()->getTokenType() == PERIOD){
     }
@@ -202,12 +221,12 @@ void Parser::predicateList(vector<Token*> &tokens) {
 
 }
 
-void Parser::parameterList(vector<Token*> &tokens) {
+void Parser::parameterList(vector<Token*> &tokens, vector<Parameter*> &parameters) {
     //parameterList	-> 	COMMA parameter parameterList | lambda
     if(tokens.front()->getTokenType() == COMMA){
         COMMAparse(tokens);
-        parameter(tokens);
-        parameterList(tokens);
+        parameters.push_back(parameter(tokens));
+        parameterList(tokens, parameters);
     }
     else if(tokens.front()->getTokenType() == RIGHT_PAREN){
     }
@@ -217,12 +236,12 @@ void Parser::parameterList(vector<Token*> &tokens) {
 
 }
 
-void Parser::stringList(vector<Token*> &tokens) {
+void Parser::stringList(vector<Token*> &tokens, vector<Parameter*> &strings) {
     //stringList	-> 	COMMA STRING stringList | lambda
     if(tokens.front()->getTokenType() == COMMA){
         COMMAparse(tokens);
-        STRINGparse(tokens);
-        stringList(tokens);
+        strings.push_back(STRINGparse(tokens));
+        stringList(tokens, strings);
     }
     else if(tokens.front()->getTokenType() == RIGHT_PAREN){
     }
@@ -232,12 +251,12 @@ void Parser::stringList(vector<Token*> &tokens) {
 
 }
 
-void Parser::idList(vector<Token*> &tokens) {
+void Parser::idList(vector<Token*> &tokens, vector<Parameter*> &ids) {
     //idList  	-> 	COMMA ID idList | lambda
     if(tokens.front()->getTokenType() == COMMA){
         COMMAparse(tokens);
-        IDparse(tokens);
-        idList(tokens);
+        ids.push_back(IDparse(tokens));
+        idList(tokens, ids);
     }
     else if(tokens.front()->getTokenType() == RIGHT_PAREN){
     }
@@ -247,16 +266,16 @@ void Parser::idList(vector<Token*> &tokens) {
 
 }
 
-void Parser::parameter(vector<Token*> &tokens) {
+Parameter* Parser::parameter(vector<Token*> &tokens) {
     //parameter	->	STRING | ID | expression
     if(tokens.front()->getTokenType() == STRING){
-        STRINGparse(tokens);
+        return STRINGparse(tokens);
     }
     else if(tokens.front()->getTokenType() == ID){
-        IDparse(tokens);
+        return IDparse(tokens);
     }
     else if(tokens.front()->getTokenType() == LEFT_PAREN){
-        expression(tokens);
+        return expression(tokens);
     }
     else{
         throw "bad";
@@ -264,14 +283,16 @@ void Parser::parameter(vector<Token*> &tokens) {
 
 }
 
-void Parser::expression(vector<Token*> &tokens) {
+Expression* Parser::expression(vector<Token*> &tokens) {
     //expression	->	LEFT_PAREN parameter operator parameter RIGHT_PAREN
     if(tokens.front()->getTokenType() == LEFT_PAREN){
         LEFT_PARENparse(tokens);
-        parameter(tokens);
-        operatorParse(tokens);
-        parameter(tokens);
+       Parameter* parameter1 = parameter(tokens);
+       TokenType op =  operatorParse(tokens);
+       Parameter* parameter2 = parameter(tokens);
         RIGHT_PARENparse(tokens);
+
+        return(new Expression(parameter1, op, parameter2));
     }
     else{
         throw "bad";
@@ -279,13 +300,15 @@ void Parser::expression(vector<Token*> &tokens) {
 
 }
 
-void Parser::operatorParse(vector<Token*> &tokens) {
+TokenType Parser::operatorParse(vector<Token*> &tokens) {
     //operator	->	ADD | MULTIPLY
     if(tokens.front()->getTokenType() == ADD){
         ADDparse(tokens);
+        return ADD;
     }
     if(tokens.front()->getTokenType() == MULTIPLY){
         MULTIPLYparse(tokens);
+        return MULTIPLY;
     }
     else{
         throw "bad";
@@ -353,9 +376,12 @@ void Parser::END_OF_FILEparse(vector<Token *> &tokens) {
 
 }
 
-void Parser::IDparse(vector<Token *> &tokens) {
+PlainParameter * Parser::IDparse(vector<Token *> &tokens) {
     if(tokens.front()->getTokenType() == ID){
+       PlainParameter *name = new PlainParameter(tokens.front()->getTokenInput());
         tokens.erase(tokens.begin());
+        return name;
+
     }
     else{
         throw "bad id";
@@ -383,9 +409,11 @@ void Parser::RIGHT_PARENparse(vector<Token *> &tokens) {
 
 }
 
-void Parser::STRINGparse(vector<Token *> &tokens) {
+PlainParameter* Parser::STRINGparse(vector<Token *> &tokens) {
     if(tokens.front()->getTokenType() == STRING){
+        PlainParameter *name = new PlainParameter(tokens.front()->getTokenInput());
         tokens.erase(tokens.begin());
+        return name;
     }
     else{
         throw "bad string";
@@ -452,3 +480,14 @@ void Parser::MULTIPLYparse(vector<Token *> &tokens) {
     }
 
 }
+
+Parser::Parser(){
+    stream = new DatalogProgram;
+
+}
+
+DatalogProgram* Parser::getDatalogProgram() {
+    return stream;
+}
+
+

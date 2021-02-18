@@ -3,3 +3,8 @@
 //
 
 #include "Parameter.h"
+
+string Parameter::toString() {
+    return std::string();
+}
+

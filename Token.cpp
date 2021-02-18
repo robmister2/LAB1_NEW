@@ -48,3 +48,7 @@ std::string Token::tokenToString(TokenType type)
     };
     return "UNDEFINED";
 }
+
+string Token::getTokenInput() {
+    return input;
+}

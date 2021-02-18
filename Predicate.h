@@ -1,14 +1,20 @@
-//
-// Created by Rob on 2/18/2021.
-//
-#include <string>
+
 #ifndef LAB1_NEW_PREDICATE_H
 #define LAB1_NEW_PREDICATE_H
+#include <string>
+#include <vector>
+#include "Parameter.h"
 using namespace std;
 
 
 class Predicate {
+private:
+    string name;
+    vector<Parameter*> parameters;
+
 public:
+    Predicate();
+    Predicate(string name1, vector<Parameter*> parameters1);
     string toString();
 
 };

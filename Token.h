@@ -25,8 +25,8 @@ public:
 
     string toString();
 
-
-    string tokenToString(TokenType type);
+    static string tokenToString(TokenType type);
+    string getTokenInput();
 };
 
 
