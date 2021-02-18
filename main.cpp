@@ -2,6 +2,7 @@
 #include <fstream>
 #include <stdexcept>
 #include "Lexer.h"
+#include "Parser.h"
 
 int main (int argc, char* argv[]) {
 
@@ -20,11 +21,31 @@ int main (int argc, char* argv[]) {
     inputString.assign( (std::istreambuf_iterator<char>(ifs) ),
                         (std::istreambuf_iterator<char>()    ) );
 
-    Lexer *trial = new Lexer;
-    trial->Run(inputString);
-    std::cout << trial->toString();
+    Lexer *tokenizer = new Lexer;
+    tokenizer->Run(inputString);
 
-    delete trial;
+    vector<Token*> allTokens = tokenizer->GetTokens();
+    //std::cout << tokenizer->toString();
+
+    for (int i = 0; i < allTokens.size(); i++){
+        if (allTokens.at(i)->getTokenType() == COMMENT){
+            allTokens.erase(allTokens.begin() + i);
+            i--;
+        }
+    }
+
+    Parser *parser = new Parser;
+    try{
+        parser->parse(allTokens);
+    }
+    catch (...){
+        cout << "Failure!" << endl;
+        cout << "  ";
+        cout << allTokens.front()->toString() << endl;
+    }
+
+    delete tokenizer;
+    delete parser;
 
     return 0;
 }

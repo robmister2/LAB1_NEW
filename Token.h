@@ -19,6 +19,9 @@ public:
         input = name;
         line = lineNum;
     }
+    TokenType getTokenType(){
+        return token;
+    }
 
     string toString();
 

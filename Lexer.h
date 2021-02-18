@@ -46,6 +46,8 @@ public:
 // Other needed methods here
 
     int removeWhitespace(string& input);
+
+    vector<Token *> GetTokens();
 };
 
 

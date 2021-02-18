@@ -99,3 +99,7 @@ int Lexer::removeWhitespace(string& input){
     input.erase(0, count);
     return lineNums;
 }
+
+vector<Token *> Lexer::GetTokens() {
+    return tokens;
+}
