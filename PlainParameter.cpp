@@ -4,9 +4,9 @@
 
 #include "PlainParameter.h"
 
-PlainParameter::PlainParameter(string name1) {
+PlainParameter::PlainParameter(string name1, bool isConstant1) {
     name = name1;
-
+    isConstant = isConstant1;
 }
 
 string PlainParameter::getName() {

@@ -27,6 +27,16 @@ private:
     void insertDomain(string domain);
     string toString();
 
+    vector<Predicate*> getSchemes(){
+        return schemes;
+    }
+    vector<Predicate*> getFacts(){
+        return facts;
+    }
+    vector<Predicate*> getQueries(){
+        return queries;
+    }
+
 };
 
 

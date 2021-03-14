@@ -10,7 +10,7 @@ class PlainParameter:
 private:
     string name;
 public:
-    PlainParameter(string name1);
+    PlainParameter(string name1, bool isConstant1);
     string getName();
 
     string toString();

@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include "Lexer.h"
 #include "Parser.h"
+#include "Interpreter.h"
 
 int main (int argc, char* argv[]) {
 
@@ -36,18 +37,22 @@ int main (int argc, char* argv[]) {
 
     Parser *parser = new Parser;
 
-
+    DatalogProgram* datalogProgram;
     try{
         parser->parse(allTokens);
-        cout << "Success!" << endl;
-        DatalogProgram* parsed = parser->getDatalogProgram();
-        cout << parsed->toString();
+        datalogProgram = parser->getDatalogProgram();
     }
     catch (...){
         cout << "Failure!" << endl;
         cout << "  ";
         cout << allTokens.front()->toString() << endl;
     }
+    Database *database = new Database();
+    Interpreter *interpreter = new Interpreter(datalogProgram, database);
+    interpreter->run();
+    cout << interpreter->toString();
+
+
 
     delete tokenizer;
     delete parser;

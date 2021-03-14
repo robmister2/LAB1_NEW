@@ -16,6 +16,12 @@ public:
     Predicate();
     Predicate(string name1, vector<Parameter*> parameters1);
     string toString();
+    string getName(){
+        return name;
+    }
+    vector<Parameter*> getParameters(){
+        return parameters;
+    }
 
 };
 

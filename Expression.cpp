@@ -12,6 +12,7 @@ Expression::Expression(Parameter *parameter1, TokenType oper, Parameter* paramet
     param1 = parameter1;
     param2 = parameter2;
     op = oper;
+    isConstant = false;
 
 }
 

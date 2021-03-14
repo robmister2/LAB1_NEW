@@ -378,7 +378,7 @@ void Parser::END_OF_FILEparse(vector<Token *> &tokens) {
 
 PlainParameter * Parser::IDparse(vector<Token *> &tokens) {
     if(tokens.front()->getTokenType() == ID){
-       PlainParameter *name = new PlainParameter(tokens.front()->getTokenInput());
+       PlainParameter *name = new PlainParameter(tokens.front()->getTokenInput(), false);
         tokens.erase(tokens.begin());
         return name;
 
@@ -411,7 +411,7 @@ void Parser::RIGHT_PARENparse(vector<Token *> &tokens) {
 
 PlainParameter* Parser::STRINGparse(vector<Token *> &tokens) {
     if(tokens.front()->getTokenType() == STRING){
-        PlainParameter *name = new PlainParameter(tokens.front()->getTokenInput());
+        PlainParameter *name = new PlainParameter(tokens.front()->getTokenInput(), true);
         tokens.erase(tokens.begin());
         return name;
     }
