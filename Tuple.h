@@ -14,13 +14,15 @@ private:
 public:
     Tuple();
     bool operator< (const Tuple & other) const {
-         for (unsigned int i = 0; i < values.size(); ++i){
-             if(values.at(i).compare(other.values.at(i)) > 0){ //if one word is longer than another, or alphabetical //FIXME not correctly inserting into datalog program
-                 return false;
-             }
-         }
-         return true;
+        /*  for (unsigned int i = 0; i < values.size(); ++i){
+              if(values.at(i).compare(other.values.at(i)) > 0){ //nope this shiz is are not do be working
+                  return false;
+              }
+          }
+          return true; */
+        return this->values < other.values;
     }
+
     string getValue(int i){
         return values.at(i);
     }
