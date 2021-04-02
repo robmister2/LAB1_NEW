@@ -22,3 +22,9 @@ Tuple Tuple::project(vector<int> indicies) {
 Tuple::Tuple() {
 
 }
+
+Tuple Tuple::copy() {
+    Tuple tuple = Tuple();
+    tuple.values = values;
+    return tuple;
+}

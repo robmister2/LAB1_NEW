@@ -15,7 +15,7 @@ public:
     Tuple();
     bool operator< (const Tuple & other) const {
         /*  for (unsigned int i = 0; i < values.size(); ++i){
-              if(values.at(i).compare(other.values.at(i)) > 0){ //nope this shiz is are not do be working
+              if(values.at(i).compare(other.values.at(i)) > 0){ //nope this is are not do be working
                   return false;
               }
           }
@@ -24,12 +24,22 @@ public:
     }
 
     string getValue(int i){
+
         return values.at(i);
     }
 
     Tuple(Predicate *fact);
 
     Tuple project (vector<int> indicies);
+
+    Tuple copy();
+
+    vector<string> getValues(){
+        return values;
+    }
+    void insertValue(string value){
+        values.push_back(value);
+    }
 };
 
 

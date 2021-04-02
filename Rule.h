@@ -16,6 +16,13 @@ private:
     string toString();
     Rule(Predicate* headpred1, vector<Predicate*> preds1);
 
+    vector<Predicate*> getPreds(){
+        return predicates;
+    }
+    Predicate* getHead(){  //HEHE XD
+        return headPredicate;
+    }
+
 };
 
 

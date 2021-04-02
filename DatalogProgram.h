@@ -36,6 +36,9 @@ private:
     vector<Predicate*> getQueries(){
         return queries;
     }
+    vector<Rule*> getRules(){
+        return rules;
+    }
 
 };
 

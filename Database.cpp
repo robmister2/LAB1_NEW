@@ -19,3 +19,13 @@ void Database::insertFact(string name, Tuple tuple) {
 
 }
 
+void Database::insertRule(string name, Tuple tuple) {
+    relations.at(name).insertTuple(tuple);
+
+}
+
+void Database::replaceRelation(string name, Relation relation) {
+    relations[name] = relation;
+
+}
+

@@ -19,6 +19,8 @@ public:
     Database ();
     void insertScheme(string name, Relation relation);
     void insertFact(string name, Tuple tuple);
+    void insertRule(string name, Tuple tuple);
+    void replaceRelation(string name, Relation relation);
     Relation getRelation(string name){
         return relations.at(name);
     }

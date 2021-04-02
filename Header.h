@@ -18,6 +18,8 @@ public:
     Header(Predicate *schemes);
     Header* project (vector<int> indicies);
     Header* rename (vector<string> renames);
+    Header* join (Header* header2);
+
     vector<string> getAttributes(){
         return attributes;
     }

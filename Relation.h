@@ -17,6 +17,7 @@ private:
     string name;
     Header* header;
     set<Tuple> rows;
+    set<Tuple> newTuples;
 public:
     Relation();
     Relation(Predicate* scheme);
@@ -28,6 +29,14 @@ public:
 
    Relation rename (vector<string> renames);
 
+   Relation join (Relation relation2);
+
+   Relation unionize (Relation relation2);
+
+   bool isJoinable(Tuple t1, Tuple t2, vector<vector<unsigned int>> pairs);
+
+   Tuple combineTuples(Tuple t1, Tuple t2, vector<int> indexes);
+
    string toString();
 
    Relation copy();
@@ -35,16 +44,31 @@ public:
    int getRowCount(){
        return rows.size();
    }
+   set<Tuple> getRows(){
+       return rows;
+   }
 
    void setName(string name1){
        name = name1;
+   }
+   string getName(){
+       return name;
    }
    void setHeader(Header* header1){
        header = header1;
    }
 
    void insertTuple (Tuple newTuple){
+       unsigned int rowsize = rows.size();
        rows.insert(newTuple);
+       if(rows.size() != rowsize){
+           newTuples.insert(newTuple);
+       }
+   }
+   string newTupleToString();
+
+   Header* getHeader(){
+       return header;
    }
 
 

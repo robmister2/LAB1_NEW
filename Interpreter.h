@@ -16,8 +16,9 @@ private:
 public:
     Interpreter(DatalogProgram* datalogProgram, Database* database1);
     void run ();
-    Relation evaluatePredicate(Predicate query);
+    Relation evaluatePredicate(Predicate* query);
     string toString();
+    vector<int> getProjectIndicies(vector<Parameter *> parameters);
 
 };
 
